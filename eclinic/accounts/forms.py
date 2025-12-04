@@ -24,7 +24,8 @@ class SignupForm(forms.ModelForm):
         if commit:
             user.save()
 
-            Profile.objects.create(user=user, role=role)
+            Profile.objects.get_or_create(user=user, defaults={'role': role})
+
 
         return user
  

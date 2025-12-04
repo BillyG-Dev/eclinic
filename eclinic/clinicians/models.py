@@ -12,8 +12,9 @@ class Clinician(models.Model):
     )
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    specialization = models.CharField(max_length=50, choices=SPECIALIZATIONS)
-    on_duty = models.BooleanField(default=False)
+    specialization = models.CharField(max_length=50, choices=SPECIALIZATIONS , default='general')
+    duty_status = models.BooleanField(default=False)
+
 
     def __str__(self):
         return f"{self.user.username} ({self.specialization})"
@@ -21,6 +22,10 @@ class Clinician(models.Model):
 '''
 from django.db import models
 from accounts.models import User
+class Clinician(models.Model):
+    ...
+    duty_status = models.CharField(max_length=20, choices=..., default="...")
+
 
 # Create your models here.
 

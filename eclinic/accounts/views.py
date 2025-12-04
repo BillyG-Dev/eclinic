@@ -1,13 +1,12 @@
-
-# Create your views here.
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User
 
-from .models import Profile  # assuming Profile stores role
+from .models import Profile
 from .forms import SignupForm, LoginForm
+
 
 # -------------------------
 # SIGN UP VIEW
@@ -16,14 +15,10 @@ def signup_view(request):
     if request.method == "POST":
         form = SignupForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            role = form.cleaned_data['role']
-
-            # create profile with role
-            Profile.objects.create(user=user, role=role)
-
+            user = form.save()  # signup form already sets password + role
             messages.success(request, "Account created successfully!")
             return redirect('login')
+
     else:
         form = SignupForm()
 
@@ -45,9 +40,10 @@ def login_view(request):
 
             if user:
                 login(request, user)
-                return redirect('dashboard')
+                return redirect('dashboard_redirect')  # FIXED
             else:
                 messages.error(request, "Invalid username or password")
+
     else:
         form = LoginForm()
 
@@ -76,7 +72,14 @@ def dashboard_redirect_view(request):
     elif role == "admin":
         return redirect('admin_dashboard')
 
+    # fallback
+    messages.error(request, "Invalid role assigned.")
+    return redirect('login')
 
+
+# -------------------------
+# DASHBOARD PAGES
+# -------------------------
 @login_required
 def patient_dashboard_view(request):
     return render(request, 'accounts/patient_dashboard.html')

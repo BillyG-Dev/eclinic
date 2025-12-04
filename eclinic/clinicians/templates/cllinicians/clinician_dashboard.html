@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Clinician Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Welcome, {{ clinician.user.username }}!</h2>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">Your Info</h5>
+            <p><strong>Specialization:</strong> {{ clinician.get_specialization_display }}</p>
+            <p><strong>Duty Status:</strong> 
+                {% if clinician.duty_status %}
+                    <span class="text-success">On Duty</span>
+                {% else %}
+                    <span class="text-danger">Off Duty</span>
+                {% endif %}
+            </p>
+
+            <a href="{% url 'toggle_duty_status' %}" class="btn btn-primary">
+                {% if clinician.duty_status %}Go Off Duty{% else %}Go On Duty{% endif %}
+            </a>
+        </div>
+    </div>
+
+    <!-- Placeholder for upcoming appointments -->
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Upcoming Appointments</h5>
+            <p>Feature coming soon...</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
