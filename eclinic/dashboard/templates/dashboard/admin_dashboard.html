@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Admin Dashboard</h2>
+
+    <hr>
+    <h4>Clinicians</h4>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Specialization</th>
+                <th>Duty Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for clinician in clinicians %}
+            <tr>
+                <td>{{ clinician.user.username }}</td>
+                <td>{{ clinician.get_specialization_display }}</td>
+                <td>
+                    {% if clinician.duty_status %}
+                        <span class="badge bg-success">On Duty</span>
+                    {% else %}
+                        <span class="badge bg-danger">Off Duty</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <hr>
+    <h4>Patients</h4>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Full Name</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for patient in patients %}
+            <tr>
+                <td>{{ patient.user.username }}</td>
+                <td>{{ patient.user.get_full_name }}</td>
+                <td>{{ patient.user.email }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <hr>
+    <h4>Appointments</h4>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Patient</th>
+                <th>Clinician</th>
+                <th>Date & Time</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for appointment in appointments %}
+            <tr>
+                <td>{{ appointment.patient.user.username }}</td>
+                <td>{{ appointment.clinician.user.username }}</td>
+                <td>{{ appointment.date }} {{ appointment.time }}</td>
+                <td>{{ appointment.status|title }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

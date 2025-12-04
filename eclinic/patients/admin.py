@@ -6,5 +6,5 @@ from .models import Patient
 
 @admin.register(Patient)
 class PatientAdmin(admin.ModelAdmin):
-    list_display = ('user', 'medical_history', 'date_of_birth')
+    list_display = ('user', 'phone', 'date_of_birth')
     search_fields = ('user__username',)

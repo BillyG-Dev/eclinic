@@ -23,7 +23,7 @@ class Appointment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.patient.user.username} → {self.clinician.user.username} on {self.date}"
+        return f"{self.patient.user.username} → {self.clinician.user.username} on {self.date} at {self.time}"
 
 '''
 from django.db import models
