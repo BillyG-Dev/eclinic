@@ -1,29 +1,31 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import User
-from .models import Profile
 
+from .models import Profile
 from clinicians.models import Clinician
 from patients.models import Patient
 
+
+# Create Profile when User is created
 @receiver(post_save, sender=User)
 def create_related_profile(sender, instance, created, **kwargs):
     if created:
-        # Create Profile for every user
-         role = getattr(instance, '_role', None)
-         if role:
-            profile = Profile.objects.create(user=instance, role=role)
+        role = getattr(instance, '_role', None)
+        if role:
+            Profile.objects.create(user=instance, role=role)
 
+
+# Create Clinician or Patient profile when Profile is created
 @receiver(post_save, sender=Profile)
 def create_user_role_models(sender, instance, created, **kwargs):
     if created:
-        # If user is clinician → create clinician model
-        if instance.role == 'clinician':
+        if instance.role == 'clinician' and not hasattr(instance.user, 'clinician'):
             Clinician.objects.create(user=instance.user)
 
-        # If user is patient → create patient model
-        if instance.role == 'patient':
+        if instance.role == 'patient' and not hasattr(instance.user, 'patient'):
             Patient.objects.create(user=instance.user)
+
             
 '''
 @receiver(post_save, sender=User)

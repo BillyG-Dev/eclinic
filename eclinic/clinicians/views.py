@@ -13,10 +13,12 @@ def clinician_dashboard_view(request):
         clinician = request.user.clinician
     except Clinician.DoesNotExist:
         messages.error(request, "Clinician profile not found.")
-        return redirect('dashboard')  # or some safe fallback
+        return redirect('login_redirect')  # or some safe fallback
 
     # Fetch appointments for this clinician, ordered by date and time
     appointments = Appointment.objects.filter(clinician=clinician).order_by('date', 'time')
+    clinician, created = Clinician.objects.get_or_create(user=request.user)
+
 
     context = {
         'clinician': clinician,
@@ -34,7 +36,7 @@ def toggle_duty_status(request):
         clinician = request.user.clinician
     except Clinician.DoesNotExist:
         messages.error(request, "Clinician profile not found.")
-        return redirect('dashboard')
+        return redirect('login_redirect')
 
     clinician.duty_status = not clinician.duty_status
     clinician.save()

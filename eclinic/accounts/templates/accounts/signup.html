@@ -27,9 +27,21 @@
             </div>
 
             <div class="mb-3">
+                <label class="form-label">Confirm Password</label>
+                {{ form.password2 }}
+            </div>
+
+            <div class="mb-3">
                 <label class="form-label">Select Role</label>
                 {{ form.role }}
             </div>
+
+            <!-- Display form errors -->
+            {% if form.errors %}
+                <div class="alert alert-danger">
+                    {{ form.errors }}
+                </div>
+            {% endif %}
 
             <button class="btn btn-success w-100" type="submit">Create Account</button>
         </form>
@@ -41,4 +53,3 @@
     </div>
 </div>
 {% endblock %}
-
