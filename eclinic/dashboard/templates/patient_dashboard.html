@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Patient Dashboard{% endblock %}
+
+{% block content %}
+<h2>Welcome, {{ patient.full_name }}</h2>
+<p>Age: {{ patient.age }}</p>
+<p>Medical History: {{ patient.medical_history }}</p>
+<a href="{% url 'patient_profile' %}" class="btn btn-outline-success mt-3">Edit Profile</a>
+
+<h3>Your Recent Appointments</h3>
+<table>
+    <tr>
+        <th>Clinician</th>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Status</th>
+    </tr>
+
+    {% for appointment in appointments %}
+    <tr>
+        <td>{{ appointment.clinician.full_name }}</td>
+        <td>{{ appointment.date }}</td>
+        <td>{{ appointment.time }}</td>
+        <td>{{ appointment.status }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="4">You have no appointments yet.</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<br>
+<a href="{% url 'book_appointment' %}">Book Appointment</a> |
+<a href="{% url 'patient_appointments' %}">View All</a>
+
+{% endblock %}

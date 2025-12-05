@@ -26,4 +26,3 @@ urlpatterns = [
     path('patients/', include('patients.urls')),
     path('appointments/', include('appointments.urls')),
 ]
-

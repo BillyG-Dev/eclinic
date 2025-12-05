@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Clinician Profile{% endblock %}
+
+{% block content %}
+<h2>Edit Clinician Profile</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Save Changes</button>
+</form>
+{% endblock %}

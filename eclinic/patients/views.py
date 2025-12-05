@@ -1,18 +1,17 @@
-from django.shortcuts import render 
-from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from .forms import PatientForm
 from .models import Patient
-from appointments.models import Appointment
-from django.utils.timezone import now
+from django.contrib.auth.decorators import login_required
+from accounts.decorators import patient_required
 
-
-@login_required
-def patient_dashboard_view(request):
+@patient_required
+def patient_profile(request):
     patient = Patient.objects.get(user=request.user)
-    appointments = Appointment.objects.filter(patient=patient).order_by('-date', '-time')
-
-    return render(request, "patients/patient_dashboard.html", {
-        "patient": patient,
-        "appointments": appointments,
-    })
-
-# Create your views here.
+    if request.method == 'POST':
+        form = PatientForm(request.POST, instance=patient)
+        if form.is_valid():
+            form.save()
+            return redirect('patient_dashboard')
+    else:
+        form = PatientForm(instance=patient)
+    return render(request, 'patients/patient_profile.html', {'form': form})

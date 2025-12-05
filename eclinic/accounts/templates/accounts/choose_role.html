@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Choose Role - eClinic Connect{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Sign Up as</h2>
+<div class="row">
+    <div class="col-md-6">
+        <a href="{% url 'patient_signup' %}" class="btn btn-outline-success w-100 py-3">Patient</a>
+    </div>
+    <div class="col-md-6">
+        <a href="{% url 'clinician_signup' %}" class="btn btn-success w-100 py-3">Clinician</a>
+    </div>
+</div>
+{% endblock %}

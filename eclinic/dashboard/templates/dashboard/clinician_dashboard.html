@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Clinician Dashboard{% endblock %}
+
+{% block content %}
+<h2>Welcome, {{ clinician.full_name }}</h2>
+<p>Specialization: {{ clinician.specialization }}</p>
+<p>Status: {{ clinician.duty_status }}</p>
+<a href="{% url 'clinician_profile' %}" class="btn btn-outline-success mt-3">Edit Profile</a>
+
+<h3>Upcoming Appointments</h3>
+
+<table>
+    <tr>
+        <th>Patient</th>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Reason</th>
+    </tr>
+
+    {% for appointment in appointments %}
+    <tr>
+        <td>{{ appointment.patient.full_name }}</td>
+        <td>{{ appointment.date }}</td>
+        <td>{{ appointment.time }}</td>
+        <td>{{ appointment.reason }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="4">No appointments scheduled.</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<br>
+<a href="{% url 'clinician_appointments' %}">View All</a>
+
+{% endblock %}

@@ -1,34 +1,28 @@
 from django.db import models
 from django.contrib.auth.models import User
-from patients.models import Patient
 from clinicians.models import Clinician
+from patients.models import Patient
 
 class Appointment(models.Model):
-
-    STATUS_CHOICES = (
-        ('pending', 'Pending'),
-        ('approved', 'Approved'),
-        ('completed', 'Completed'),
-        ('cancelled', 'Cancelled'),
-    )
+    STATUS_CHOICES = [
+        ('Pending', 'Pending'),
+        ('Confirmed', 'Confirmed'),
+        ('Completed', 'Completed'),
+        ('Cancelled', 'Cancelled'),
+    ]
 
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
     clinician = models.ForeignKey(Clinician, on_delete=models.CASCADE)
-
     date = models.DateField()
     time = models.TimeField()
-
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
-
-    created_at = models.DateTimeField(auto_now_add=True)
+    reason = models.TextField(default='No reason provided')
+    status = models.CharField(max_length=30, choices=STATUS_CHOICES, default='Pending')
 
     def __str__(self):
-        return f"{self.patient.user.username} → {self.clinician.user.username} on {self.date} at {self.time}"
+        return f"{self.patient.full_name} with {self.clinician.full_name} on {self.date}"
+
 
 '''
-from django.db import models
-from patients.models import Patient
-from clinicians.models import Clinician
 
 class Appointment(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)

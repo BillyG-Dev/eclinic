@@ -1,11 +1,7 @@
 from django.contrib import admin
-from .models import Profile
+from .models import UserProfile  # <-- fixed
 
-# Register your models here.
-#admin.site.register(Profile)
-
-@admin.register(Profile)
-class ProfileAdmin(admin.ModelAdmin):
+@admin.register(UserProfile)
+class UserProfileAdmin(admin.ModelAdmin):
     list_display = ('user', 'role')
-    list_filter = ('role',)
-    search_fields = ('user__username',)
+

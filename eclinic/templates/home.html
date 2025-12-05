@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome to eClinic Connect{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <div class="text-center mb-5">
+        <h1 class="display-5 fw-bold text-success">Welcome to eClinic Connect</h1>
+        <p class="lead text-muted mt-3" style="max-width: 700px; margin: auto;">
+            eClinic Connect brings together highly qualified clinicians, experienced healthcare experts,
+            and modern digital solutions to deliver reliable, fast, and patient-centered medical services.
+            We ensure every patient receives the best care possible, supported by trusted professionals.
+        </p>
+    </div>
+
+    <div class="row justify-content-center mt-4">
+
+        <!-- Clinician Card -->
+        <div class="col-md-5">
+            <div class="card shadow-lg border-0 rounded-4 mb-4">
+                <div class="card-body text-center p-4">
+                    <h3 class="fw-semibold">Clinician</h3>
+                    <p class="text-muted mt-2">
+                        Doctors, nurses & medical specialists — register or update your professional profile.
+                    </p>
+                    <a href="{% url 'clinician_profile_form' %}" class="btn btn-success w-75 mt-3">
+                        Create / Update Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Patient Card -->
+        <div class="col-md-5">
+            <div class="card shadow-lg border-0 rounded-4 mb-4">
+                <div class="card-body text-center p-4">
+                    <h3 class="fw-semibold">Patient</h3>
+                    <p class="text-muted mt-2">
+                        Fill in or update your patient information to receive quality medical care.
+                    </p>
+                    <a href="{% url 'patient_profile_form' %}" class="btn btn-outline-success w-75 mt-3">
+                        Create / Update Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

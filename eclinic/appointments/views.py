@@ -1,41 +1,59 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from django import forms
 from .models import Appointment
-from .forms import AppointmentForm
 from patients.models import Patient
 from clinicians.models import Clinician
+from accounts.decorators import patient_required, clinician_required
+from appointments.models import Appointment
 
-# Create your views here.
-@login_required
-def appointment_list_view(request):
-    if hasattr(request.user, 'patient'):
-        appointments = Appointment.objects.filter(patient=request.user.patient)
-    elif hasattr(request.user, 'clinician'):
-        appointments = Appointment.objects.filter(clinician=request.user.clinician)
-    else:
-        appointments = Appointment.objects.none()
-    return render(request, "appointments/appointment_list.html", {"appointments": appointments})
+class AppointmentForm(forms.ModelForm):
+    class Meta:
+        model = Appointment
+        fields = ['clinician', 'date', 'time', 'reason']
 
-@login_required
-def appointment_create_view(request):
-    if not hasattr(request.user, 'patient'):
-        return redirect('clinician_dashboard')  # Only patients can create
-    patient = request.user.patient
+# Patient books an appointment
+@patient_required
+def book_appointment(request):
+    patient = Patient.objects.get(user=request.user)
     if request.method == 'POST':
         form = AppointmentForm(request.POST)
         if form.is_valid():
             appointment = form.save(commit=False)
             appointment.patient = patient
             appointment.save()
-            return redirect('appointment_list')
+            return redirect('patient_appointments')
     else:
         form = AppointmentForm()
-    return render(request, "appointments/appointment_form.html", {"form": form})
+    return render(request, 'appointments/book_appointment.html', {'form': form})
 
-@login_required
-def appointment_cancel_view(request, pk):
-    appointment = get_object_or_404(Appointment, pk=pk)
-    if hasattr(request.user, 'patient') and appointment.patient == request.user.patient:
-        appointment.status = 'cancelled'
-        appointment.save()
-    return redirect('appointment_list')
+# List appointments for patient
+@patient_required
+def patient_appointments(request):
+    patient = Patient.objects.get(user=request.user)
+    appointments = Appointment.objects.filter(patient=patient)
+    return render(request, 'appointments/appointments_list.html', {'appointments': appointments})
+
+# List appointments for clinician
+@clinician_required
+def clinician_appointments(request):
+    clinician = Clinician.objects.get(user=request.user)
+    appointments = Appointment.objects.filter(clinician=clinician)
+    return render(request, 'appointments/appointments_list.html', {'appointments': appointments})
+
+
+@patient_required
+def patient_dashboard(request):
+    patient = Patient.objects.get(user=request.user)
+    appointments = Appointment.objects.filter(patient=patient).order_by('-date', '-time')[:5]
+    return render(request, 'dashboard/patient_dashboard.html', {
+        'appointments': appointments
+    })
+
+@clinician_required
+def clinician_dashboard(request):
+    clinician = Clinician.objects.get(user=request.user)
+    appointments = Appointment.objects.filter(clinician=clinician).order_by('date', 'time')[:5]
+    return render(request, 'dashboard/clinician_dashboard.html', {
+        'appointments': appointments
+    })
+

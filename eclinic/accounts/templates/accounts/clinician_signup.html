@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Clinician Signup{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Clinician Signup</h2>
+<form method="post">
+    {% csrf_token %}
+    <h4>User Account</h4>
+    {{ user_form.as_p }}
+    <h4>Clinician Profile</h4>
+    {{ clinician_form.as_p }}
+    <button type="submit" class="btn btn-success">Sign Up</button>
+</form>
+{% endblock %}
