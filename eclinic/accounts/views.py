@@ -1,17 +1,19 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .forms import UserSignupForm, LoginForm
+from .forms import UserSignupForm
 from clinicians.forms import ClinicianForm
 from patients.forms import PatientForm
-from .models import UserProfile
+from patients.models import Patient
+from clinicians.models import Clinician
+from django.contrib.auth.forms import AuthenticationForm
 
-# Choose Role Page
+# Choose Role Page (fallback if user has no role yet)
 @login_required
 def choose_role(request):
-    if request.user.userprofile.role == 'clinician':
+    if hasattr(request.user, 'clinician'):
         return redirect('clinician_dashboard')
-    elif request.user.userprofile.role == 'patient':
+    elif hasattr(request.user, 'patient'):
         return redirect('patient_dashboard')
     return render(request, 'accounts/choose_role.html')
 
@@ -22,7 +24,6 @@ def patient_signup(request):
         patient_form = PatientForm(request.POST)
         if user_form.is_valid() and patient_form.is_valid():
             user = user_form.save()
-            user_profile = UserProfile.objects.create(user=user, role='patient')
             patient = patient_form.save(commit=False)
             patient.user = user
             patient.save()
@@ -31,7 +32,10 @@ def patient_signup(request):
     else:
         user_form = UserSignupForm()
         patient_form = PatientForm()
-    return render(request, 'accounts/patient_signup.html', {'user_form': user_form, 'patient_form': patient_form})
+    return render(request, 'accounts/patient_signup.html', {
+        'user_form': user_form, 
+        'patient_form': patient_form
+    })
 
 # Clinician Signup
 def clinician_signup(request):
@@ -40,7 +44,6 @@ def clinician_signup(request):
         clinician_form = ClinicianForm(request.POST)
         if user_form.is_valid() and clinician_form.is_valid():
             user = user_form.save()
-            user_profile = UserProfile.objects.create(user=user, role='clinician')
             clinician = clinician_form.save(commit=False)
             clinician.user = user
             clinician.save()
@@ -49,21 +52,35 @@ def clinician_signup(request):
     else:
         user_form = UserSignupForm()
         clinician_form = ClinicianForm()
-    return render(request, 'accounts/clinician_signup.html', {'user_form': user_form, 'clinician_form': clinician_form})
+    return render(request, 'accounts/clinician_signup.html', {
+        'user_form': user_form, 
+        'clinician_form': clinician_form
+    })
 
-# Login View
+# Login View (redirects based on role)
 def login_view(request):
+             # Auto-redirect if already logged in
+    if request.user.is_authenticated:
+        if hasattr(request.user, 'patient'):
+            return redirect('patient_dashboard')
+        if hasattr(request.user, 'clinician'):
+            return redirect('clinician_dashboard')
     if request.method == 'POST':
-        form = LoginForm(request, data=request.POST)
+        form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            if user.userprofile.role == 'clinician':
+
+
+            # Redirect based on role
+            if hasattr(user, 'clinician'):
                 return redirect('clinician_dashboard')
-            elif user.userprofile.role == 'patient':
+            elif hasattr(user, 'patient'):
                 return redirect('patient_dashboard')
+            else:
+                return redirect('choose_role')  # fallback if no role
     else:
-        form = LoginForm()
+        form = AuthenticationForm()
     return render(request, 'accounts/login.html', {'form': form})
 
 # Logout View

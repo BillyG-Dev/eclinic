@@ -32,6 +32,12 @@
 </table>
 
 <br>
-<a href="{% url 'clinician_appointments' %}">View All</a>
+
+<div class="d-flex flex-column align-items-center mt-4">
+    <a href="{% url 'clinician_appointments' %}" class="btn btn-success btn-lg mb-3 w-50">
+        View All Appointments
+    </a>
+</div>
+
 
 {% endblock %}
