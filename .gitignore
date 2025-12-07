@@ -12,6 +12,7 @@ staticfiles/
 static/
 node_modules/
 # Environment variables
+eclinic/.env
 .env
 *.env
 env/
