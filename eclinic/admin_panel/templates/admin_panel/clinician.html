@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Clinicians Management{% endblock %}
+
+{% block content %}
+<h2 class="fw-bold mb-4 text-success">Clinicians</h2>
+
+<table class="table table-striped table-bordered shadow-sm">
+    <thead class="table-success">
+        <tr>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Specialization</th>
+            <th>Duty Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for clinician in clinicians %}
+        <tr>
+            <td>{{ clinician.full_name }}</td>
+            <td>{{ clinician.phone_number }}</td>
+            <td>{{ clinician.specialization }}</td>
+            <td>
+                <span class="badge 
+                    {% if clinician.duty_status == 'On Duty' %}
+                        bg-success
+                    {% else %}
+                        bg-secondary
+                    {% endif %}
+                ">
+                    {{ clinician.duty_status }}
+                </span>
+            </td>
+            <td>
+                <a href="{% url 'update_clinician_status' clinician.id %}" class="btn btn-sm btn-warning">
+                    Update Status
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

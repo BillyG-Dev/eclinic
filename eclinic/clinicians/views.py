@@ -15,3 +15,4 @@ def clinician_profile(request):
     else:
         form = ClinicianForm(instance=clinician)
     return render(request, 'clinicians/clinician_profile.html', {'form': form})
+

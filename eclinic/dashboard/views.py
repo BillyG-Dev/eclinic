@@ -4,6 +4,7 @@ from clinicians.models import Clinician
 from patients.models import Patient
 from appointments.models import Appointment
 
+
 @patient_required
 def patient_dashboard(request):
     patient = Patient.objects.get(user=request.user)
@@ -19,4 +20,11 @@ def clinician_dashboard(request):
 
 
 
-
+def admin_dashboard(request):
+    context = {
+        "total_patients": Patient.objects.count(),
+        "total_clinicians": Clinician.objects.count(),
+        "total_appointments": Appointment.objects.count(),
+        "active_appointments": Appointment.objects.filter(status="Pending").count(),
+    }
+    return render(request, "admin_panel/admin_dashboard.html", context)

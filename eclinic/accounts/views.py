@@ -29,6 +29,8 @@ def choose_role(request):
         return redirect('clinician_dashboard')
     elif hasattr(request.user, 'patient'):
         return redirect('patient_dashboard')
+    elif request.user.is_superuser:
+        return redirect('admin_dashboard')
     return render(request, 'accounts/choose_role.html')
 
 # Patient Signup
@@ -75,6 +77,8 @@ def clinician_signup(request):
 def login_view(request):
              # Auto-redirect if already logged in
     if request.user.is_authenticated:
+        if request.user.is_superuser:           # ← ADDED
+            return redirect('admin_dashboard')
         if hasattr(request.user, 'patient'):
             return redirect('patient_dashboard')
         if hasattr(request.user, 'clinician'):
@@ -87,6 +91,8 @@ def login_view(request):
 
 
             # Redirect based on role
+            if user.is_superuser: 
+                return redirect('admin_dashboard')          
             if hasattr(user, 'clinician'):
                 return redirect('clinician_dashboard')
             elif hasattr(user, 'patient'):

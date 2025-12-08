@@ -112,3 +112,4 @@ eclinic/
 
 ## Future Enhancements
 
+-Email Notifications

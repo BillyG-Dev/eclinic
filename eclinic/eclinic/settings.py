@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'appointments',
     'dashboard',
     'django_daraja',
+    'admin_panel',
 ]
 # Custom User Model
 
