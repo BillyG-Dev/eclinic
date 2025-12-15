@@ -21,7 +21,7 @@
             <td>{{ patient.phone_number }}</td>
             <td>{{ patient.age }}</td>
             <td>
-                <a href="#" class="btn btn-sm btn-success disabled">View (coming soon)</a>
+                <a href="{% url 'edit_patient' patient.id %}" class="btn btn-sm btn-success">Update</a>
             </td>
         </tr>
         {% endfor %}

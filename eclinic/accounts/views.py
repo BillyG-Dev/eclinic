@@ -9,6 +9,7 @@ from clinicians.models import Clinician
 from django.contrib.auth.forms import AuthenticationForm
 from django.http import HttpResponse
 from django_daraja.mpesa.core import MpesaClient
+from .models import UserProfile
 
 def index(request):
     cl = MpesaClient()
@@ -40,6 +41,7 @@ def patient_signup(request):
         patient_form = PatientForm(request.POST)
         if user_form.is_valid() and patient_form.is_valid():
             user = user_form.save()
+            UserProfile.objects.create(user=user, role='patient')
             patient = patient_form.save(commit=False)
             patient.user = user
             patient.save()
@@ -60,6 +62,7 @@ def clinician_signup(request):
         clinician_form = ClinicianForm(request.POST)
         if user_form.is_valid() and clinician_form.is_valid():
             user = user_form.save()
+            UserProfile.objects.create(user=user, role='clinician')
             clinician = clinician_form.save(commit=False)
             clinician.user = user
             clinician.save()
