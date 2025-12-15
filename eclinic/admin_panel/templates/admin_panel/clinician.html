@@ -36,6 +36,9 @@
                 <a href="{% url 'update_clinician_status' clinician.id %}" class="btn btn-sm btn-warning">
                     Update Status
                 </a>
+                <a href="{% url 'edit_clinician' clinician.id %}" class="btn btn-sm btn-primary" onclick="return confirm('Are you sure you want to edit this clinician?');">
+                    Edit Info
+                
             </td>
         </tr>
         {% endfor %}
